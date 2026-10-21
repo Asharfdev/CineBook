@@ -5,7 +5,7 @@
 // Il est chargé avant app.js : la variable "films" y est donc disponible.
 // Chaque séance possède sa propre liste de sièges déjà occupés.
 
-const films = [
+ const films = [
   {
     id: 1,
     titre: "Mission Galaxie",

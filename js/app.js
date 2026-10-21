@@ -1,11 +1,18 @@
 "use strict";
 
+const movieContainer = document.querySelector("#films-container")
+
+
+
+
+
 // Bienvenue dans le fichier de travail principal de CineBook !
 // Le HTML et les données sont prêts, mais les interactions sont volontairement absentes.
 // La page contient déjà un exemple statique complet pour montrer le résultat attendu.
 // Inspectez et copiez la structure HTML utile, puis remplacez ces exemples avec
 // les éléments que votre code crée à partir des tableaux de data.js.
 // Avancez section par section et testez souvent dans le navigateur.
+
 
 // ==================================================
 // 0 - SÉLECTIONNER LES ÉLÉMENTS HTML
@@ -39,6 +46,48 @@
 // PISTE : ajoutez l'identifiant du film dans un attribut data-film-id du bouton.
 // MODÈLE : observez l'élément <article data-film-id="1"> dans index.html.
 // ÉCRIVEZ VOTRE CODE ICI :
+
+onloadingPage();
+
+function onloadingPage() {
+   films.forEach(movie => { movieContainer.innerHTML += renderCard(movie); });
+}
+
+function renderCard(movie) {
+   return `<article class=" YES overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" data-film-id=${movie.id}>
+          ${renderImg(movie.affiche, movie.description, movie.prix)}
+          ${renderCardContext(movie.genre,movie.titre, movie.duree)}
+            </article>`
+}
+
+function renderImg(affiche, description, prix) {
+   return `<div class="relative"><img src=${affiche} alt=${description} class="aspect-[2/3] w-full object-cover">
+          <span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${prix}</span>
+          </div>`
+   
+}
+
+function renderCardContext(genre, titre, duree) {
+   return `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">${genre}</p>
+          <h3 class="mt-1 text-lg font-black">${titre}</h3>
+          <p class="mt-2 text-sm text-slate-500">${time(duree)}</p>
+          <button type="button"   class="mt-4 w-full rounded-xl bg-cine-red px-4 py-3 font-extrabold text-white">Sélectionné</button></div>
+` 
+}
+
+function time(duree) {
+   
+   let hour =  Math.floor(duree / 60)
+   let minutes = duree % 60
+   return hour + "h" + minutes + "minutes"
+}
+
+
+
+
+ToclickButton.addEventListener("click", function() {
+   alert("You clicked me");
+});
 
 
 // ==================================================
@@ -122,3 +171,26 @@
 // PREMIER TEST CONSEILLÉ :
 // console.log(films);
 // Décommentez temporairement cette ligne pour explorer les données, puis avancez.
+
+
+
+
+
+
+// films.forEach(movie => {
+
+//    movieContainer.innerHTML += `<article class="overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" data-film-id="1">
+//           <div class="relative"><img src=${movie.affiche} alt="Affiche de Mission Galaxie" class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">55 DH</span></div>
+//           <div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">Science-fiction</p><h3 class="mt-1 text-lg font-black">Mission Galaxie</h3><p class="mt-2 text-sm text-slate-500">2 h 04 min</p><button type="button" class="mt-4 w-full rounded-xl bg-cine-red px-4 py-3 font-extrabold text-white">Sélectionné</button></div>
+//         </article>`;
+
+// });
+
+
+
+
+
+
+
+
+
