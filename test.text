@@ -1,0 +1,12 @@
+function renderCardContext(genre, titre, duree) {
+   return `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">${genre}</p>
+          <h3 class="mt-1 text-lg font-black">${titre}</h3>
+          <p class="mt-2 text-sm text-slate-500">${time(duree)}</p>
+          <button type="button" onclick="cardMovieClicked(this)"  class="mt-4 w-full  rounded-xl bg-cine-red px-4 py-3 font-extrabold text-white">Sélectionné</button></div>
+}
+
+function cardMovieClicked(buttonClickedHtmlElement) {
+    buttonClickedHtmlElement.textContent = "Selected"
+    buttonClickedHtmlElement.classList.remove("bg-cine-red")
+    buttonClickedHtmlElement.classList.add("bg-green-500")
+}

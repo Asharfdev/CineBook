@@ -3,9 +3,6 @@
 const movieContainer = document.querySelector("#films-container")
 
 
-
-
-
 // Bienvenue dans le fichier de travail principal de CineBook !
 // Le HTML et les données sont prêts, mais les interactions sont volontairement absentes.
 // La page contient déjà un exemple statique complet pour montrer le résultat attendu.
@@ -47,47 +44,7 @@ const movieContainer = document.querySelector("#films-container")
 // MODÈLE : observez l'élément <article data-film-id="1"> dans index.html.
 // ÉCRIVEZ VOTRE CODE ICI :
 
-onloadingPage();
 
-function onloadingPage() {
-   films.forEach(movie => { movieContainer.innerHTML += renderCard(movie); });
-}
-
-function renderCard(movie) {
-   return `<article class=" YES overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" data-film-id=${movie.id}>
-          ${renderImg(movie.affiche, movie.description, movie.prix)}
-          ${renderCardContext(movie.genre,movie.titre, movie.duree)}
-            </article>`
-}
-
-function renderImg(affiche, description, prix) {
-   return `<div class="relative"><img src=${affiche} alt=${description} class="aspect-[2/3] w-full object-cover">
-          <span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${prix}</span>
-          </div>`
-   
-}
-
-function renderCardContext(genre, titre, duree) {
-   return `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">${genre}</p>
-          <h3 class="mt-1 text-lg font-black">${titre}</h3>
-          <p class="mt-2 text-sm text-slate-500">${time(duree)}</p>
-          <button type="button"   class="mt-4 w-full rounded-xl bg-cine-red px-4 py-3 font-extrabold text-white">Sélectionné</button></div>
-` 
-}
-
-function time(duree) {
-   
-   let hour =  Math.floor(duree / 60)
-   let minutes = duree % 60
-   return hour + "h" + minutes + "minutes"
-}
-
-
-
-
-ToclickButton.addEventListener("click", function() {
-   alert("You clicked me");
-});
 
 
 // ==================================================
@@ -101,6 +58,7 @@ ToclickButton.addEventListener("click", function() {
 // PISTE : un changement de film doit aussi réinitialiser séance et sièges.
 // MODÈLE : #film-details contient déjà un exemple de détail à reproduire.
 // ÉCRIVEZ VOTRE CODE ICI :
+
 
 
 // ==================================================
@@ -172,13 +130,7 @@ ToclickButton.addEventListener("click", function() {
 // console.log(films);
 // Décommentez temporairement cette ligne pour explorer les données, puis avancez.
 
-
-
-
-
-
 // films.forEach(movie => {
-
 //    movieContainer.innerHTML += `<article class="overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" data-film-id="1">
 //           <div class="relative"><img src=${movie.affiche} alt="Affiche de Mission Galaxie" class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">55 DH</span></div>
 //           <div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">Science-fiction</p><h3 class="mt-1 text-lg font-black">Mission Galaxie</h3><p class="mt-2 text-sm text-slate-500">2 h 04 min</p><button type="button" class="mt-4 w-full rounded-xl bg-cine-red px-4 py-3 font-extrabold text-white">Sélectionné</button></div>
@@ -188,8 +140,78 @@ ToclickButton.addEventListener("click", function() {
 
 
 
+onloadingPage();
+
+function onloadingPage() {
+   films.forEach(movie => { movieContainer.innerHTML += renderCard(movie); });
+}
+
+function renderCard(movie) {
+   return `<article class=" YES overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" data-film-id=${movie.id}>
+          ${renderImg(movie.affiche, movie.description, movie.prix)}
+          ${renderCardContext(movie.genre,movie.titre, movie.duree)}
+            </article>`
+}
+
+function renderImg(affiche, description, prix) {
+   return `<div class="relative"><img src=${affiche} alt=${description} class="aspect-[2/3] w-full object-cover">
+          <span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${prix}</span>
+          </div>`
+   
+}
+function renderCardContext(genre, titre, duree) {
+   return `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">${genre}</p>
+          <h3 class="mt-1 text-lg font-black">${titre}</h3>
+          <p class="mt-2 text-sm text-slate-500">${time(duree)}</p>
+          <button type="button" data-clicked="" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 cardMovieClicked">
+          Choisir ce film</button></div>
+` 
+}
+
+function time(duree) {
+   let hour =  Math.floor(duree / 60)
+   let minutes = duree % 60
+   return hour + "h" + minutes + "minutes"
+}
 
 
+// document.getElementById("cardMovieClicked").addEventListener("click",function(){
+//    // cardMovieClicked.textContent = "Selected"
+//    console.log(1);
+   
+// });
+
+
+ const btns = document.querySelectorAll(".cardMovieClicked")
+
+// isbtnSelecled = false 
+
+ let isbtnSelecled = false
+
+ btns.forEach( btnClicked => {
+
+      btnClicked.addEventListener("click",function (){
+
+      isbtnSelecled = !isbtnSelecled
+
+      if (!isbtnSelecled) {
+         btnClicked.textContent = "Choisir ce film"
+         btnClicked.classList.replace("bg-cine-red", "bg-slate-50")
+         btnClicked.classList.replace("text-white", "text-slate-700")   
+        
+      } else {
+         btnClicked.textContent = "sélectionné"
+         btnClicked.classList.replace("bg-slate-50", "bg-cine-red")
+         btnClicked.classList.replace("text-slate-700", "text-white") 
+          
+      }
+      
+ })
+});
+ 
+ 
+
+ 
 
 
 
