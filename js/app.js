@@ -1,8 +1,6 @@
 "use strict";
-
+const selectedMovieIdList = [];
 const movieContainer = document.querySelector("#films-container")
-
-
 // Bienvenue dans le fichier de travail principal de CineBook !
 // Le HTML et les données sont prêts, mais les interactions sont volontairement absentes.
 // La page contient déjà un exemple statique complet pour montrer le résultat attendu.
@@ -140,78 +138,117 @@ const movieContainer = document.querySelector("#films-container")
 
 
 
+
 onloadingPage();
 
 function onloadingPage() {
-   films.forEach(movie => { movieContainer.innerHTML += renderCard(movie); });
+    films.forEach(movie => {
+        movieContainer.innerHTML += renderCard(movie);
+    });
 }
 
 function renderCard(movie) {
-   return `<article class=" YES overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" data-film-id=${movie.id}>
-          ${renderImg(movie.affiche, movie.description, movie.prix)}
-          ${renderCardContext(movie.genre,movie.titre, movie.duree)}
+    return `<article class="overflow-hidden rounded-2xl border border-red-400 bg-white shadow-xl ring-2 ring-red-100" >
+          ${renderImg(movie)}
+          ${renderCardContext(movie)}
             </article>`
 }
 
-function renderImg(affiche, description, prix) {
-   return `<div class="relative"><img src=${affiche} alt=${description} class="aspect-[2/3] w-full object-cover">
-          <span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${prix}</span>
+function renderImg(movie) {
+    return `<div class="relative"><img src=${movie.affiche} alt=${movie.description} class="aspect-[2/3] w-full object-cover">
+          <span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${movie.prix}</span>
           </div>`
-   
+
 }
-function renderCardContext(genre, titre, duree) {
-   return `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">${genre}</p>
-          <h3 class="mt-1 text-lg font-black">${titre}</h3>
-          <p class="mt-2 text-sm text-slate-500">${time(duree)}</p>
-          <button type="button" data-clicked="" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 cardMovieClicked">
-          Choisir ce film</button></div>
-` 
+
+function renderCardContext(movie) {
+    return `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">${movie.genre}</p>
+          <h3 class="mt-1 text-lg font-black">${movie.titre}</h3>
+          <p class="mt-2 text-sm text-slate-500">${time(movie.duree)}</p>
+          <button type="button" onclick="toggleSelectMovie(this, ${movie.id})"  class="mt-4 w-full  rounded-xl bg-cine-red px-4 py-3 font-extrabold text-white">Select</button></div>
+`
 }
 
 function time(duree) {
-   let hour =  Math.floor(duree / 60)
-   let minutes = duree % 60
-   return hour + "h" + minutes + "minutes"
+
+    let hour = Math.floor(duree / 60)
+    let minutes = duree % 60
+    return hour + "h" + minutes + "minutes"
 }
 
 
-// document.getElementById("cardMovieClicked").addEventListener("click",function(){
-//    // cardMovieClicked.textContent = "Selected"
-//    console.log(1);
-   
-// });
+/**
+ *
+ * @param buttonClickedHtmlElement
+ * @param movieId
+ * @desc this method will select and unselect the movie by changing the button text and the button color and notify the
+ * card pannier that the movie is selected
+ */
+function toggleSelectMovie(buttonClickedHtmlElement, movieId) {
+    if (movieAlreadySelected(movieId)) {
+        unSelectTheMovie(buttonClickedHtmlElement, movieId)
+        removeMovieFromPanier(movieId)
+    } else {
+        selectTheMovie(buttonClickedHtmlElement, movieId)
+        addMovieToPanier(movieId)
+    }
+
+}
+
+function movieAlreadySelected(movieId) {
+    return selectedMovieIdList.includes(movieId)
+}
 
 
- const btns = document.querySelectorAll(".cardMovieClicked")
+function unSelectTheMovie(buttonClickedHtmlElement, movieId) {
+    const index = selectedMovieIdList.indexOf(movieId);
+    if (index !== -1) {
+        selectedMovieIdList.splice(index, 1);
+    }
+    buttonClickedHtmlElement.textContent = "Select";
+    buttonClickedHtmlElement.classList.replace("bg-green-500", "bg-cine-red");
+}
 
-// isbtnSelecled = false 
+function selectTheMovie(buttonClickedHtmlElement, movieId) {
+    selectedMovieIdList.push(movieId)
+    buttonClickedHtmlElement.textContent = "Selected"
+    buttonClickedHtmlElement.classList.replace("bg-cine-red", "bg-green-500");
+}
 
- let isbtnSelecled = false
+function getMovieById(movieId) {
+    return films.find(movie => movie.id === movieId)
+}
 
- btns.forEach( btnClicked => {
+function addMovieToPanier(movieId) {
+    const movie = getMovieById(movieId)
+    const reservationContainer = document.getElementById("reservation-details")
 
-      btnClicked.addEventListener("click",function (){
+    reservationContainer.innerHTML += `
+        <article id="panier-movie-${movieId}" class="mt-6 grid gap-5 rounded-2xl bg-slate-50 p-5 sm:grid-cols-[100px_1fr]">
+        <img src=${movie.affiche} alt=${movie.description} 
+             class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
+            <div>
+                <div class="flex flex-wrap items-center gap-2"><h3 class="text-xl font-black">${movie.titre}</h3><span
+                    class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">${movie.prix}</span>
+                </div>
+                <p class="mt-2 text-sm font-semibold text-slate-500">Science-fiction · ${time(movie.duree)}</p>
+                <p class="mt-3 leading-7 text-slate-600">${movie.description}</p></div>
+    </article>
+    `
+}
 
-      isbtnSelecled = !isbtnSelecled
+function removeMovieFromPanier(movieId) {
+    document.getElementById(`panier-movie-${movieId}`)?.remove()
+}
 
-      if (!isbtnSelecled) {
-         btnClicked.textContent = "Choisir ce film"
-         btnClicked.classList.replace("bg-cine-red", "bg-slate-50")
-         btnClicked.classList.replace("text-white", "text-slate-700")   
-        
-      } else {
-         btnClicked.textContent = "sélectionné"
-         btnClicked.classList.replace("bg-slate-50", "bg-cine-red")
-         btnClicked.classList.replace("text-slate-700", "text-white") 
-          
-      }
-      
- })
-});
- 
- 
 
- 
+
+
+
+
+
+
+
 
 
 
